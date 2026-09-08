@@ -1,0 +1,34 @@
+ASCII
+w=4
+h=4
+
+COLOR:
+. . . . . .
+. R R R . .
+. B B B . .
+. G G G . .
+. . . . . .
+. R B G . .
+
+ID:
+. . . . . .
+. A A A . .
+. B B B . .
+. C C C . .
+. . . . . .
+. 1 2 3 . .
+
+MODIFIERS:
+. . . . . .
+. . . . . .
+. . . . . .
+. . . . . .
+. . . . . .
+. v v v . .
+
+BLOCKS:
+A R 1x1
+B B 1x1
+C G 1x1
+
+EXITS:

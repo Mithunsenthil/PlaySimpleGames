@@ -1,0 +1,30 @@
+ASCII
+w=2
+h=3
+
+COLOR:
+. . . .
+. B B B
+. . G .
+. . G .
+. . G .
+
+ID:
+. . . .
+. H H 1
+. . V .
+. . V .
+. . 2 .
+
+MODIFIERS:
+. . . .
+. - . >
+. . | .
+. . . .
+. . v .
+
+BLOCKS:
+H B 2x1 ar=h
+V G 1x2 ar=v
+
+EXITS:

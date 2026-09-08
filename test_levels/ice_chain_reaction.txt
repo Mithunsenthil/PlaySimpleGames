@@ -1,0 +1,35 @@
+ASCII
+w=1
+h=4
+
+COLOR:
+. . .
+. R R
+. G G
+. B B
+. Y Y
+. . .
+
+ID:
+. . .
+. A 1
+. B 2
+. C 3
+. D 4
+. . .
+
+MODIFIERS:
+. . .
+. . >
+. i1 >
+. i2 >
+. i3 >
+. . .
+
+BLOCKS:
+A R 1x1
+B G 1x1 ic=1
+C B 1x1 ic=2
+D Y 1x1 ic=3
+
+EXITS:

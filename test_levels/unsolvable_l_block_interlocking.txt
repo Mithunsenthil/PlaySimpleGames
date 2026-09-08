@@ -1,0 +1,30 @@
+ASCII
+w=3
+h=3
+
+COLOR:
+. . . . .
+. R B B .
+. R R B .
+. . . . .
+. R . B .
+
+ID:
+. . . . .
+. L M M .
+. L L M .
+. . . . .
+. 1 . 2 .
+
+MODIFIERS:
+. . . . .
+. . . . .
+. . . . .
+. . . . .
+. v . v .
+
+BLOCKS:
+L R RA_BL
+M B RA_TR
+
+EXITS:
