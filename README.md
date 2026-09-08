@@ -7,11 +7,9 @@ A high-performance Python solver for the **Color Block Crush** puzzle, implement
 ## Requirements & Setup
 
 - **Python Version**: Python 3.8+
-- **Dependencies**: Uses standard Python library modules (`heapq`, `collections`, `dataclasses`, `typing`, `argparse`, `time`, `sys`). Zero external pip dependencies required.
+- **Dependencies**: Uses standard Python library modules (`heapq`, `collections`, `dataclasses`, `typing`, `argparse`, `time`, `sys`). **Zero external pip dependencies required.**
 
-```bash
-pip install -r requirements.txt
-```
+No installation is needed. You can run the solver directly.
 
 ---
 
@@ -48,13 +46,13 @@ MOVES: 2
 ```
 
 - **STATUS**: `SOLVED`, `UNSOLVABLE`, or `TIMEOUT`
-- **MOVES**: Total number of moves $N$
-- Each following line represents a slide: `<block_id> <x> <y>` where $(x, y)$ is the new top-left position of the block.
+- **MOVES**: Total number of moves N
+- Each following line represents a slide: `<block_id> <x> <y>` where (x, y) is the new top-left position of the block.
 
 ---
 
 ## Project Structure
 
 - `solve.py` — The standalone solver containing all search logic and game mechanics.
-- `requirements.txt` — Empty file (only standard libraries used) as per submission requirements.
+- `Write-up.md` / `Write-up.pdf` — Detailed documentation explaining the architecture, algorithms, and performance optimizations.
 - `test_levels/` — Directory containing the ASCII puzzle text files.
