@@ -92,7 +92,7 @@ def parse_level(filepath: str) -> Level:
     walls: Set[Tuple[int, int]] = set()
     for r in range(1, h + 1):
         for c in range(1, w + 1):
-            if r - 1 < len(color_grid) and c - 1 < len(color_grid[r - 1]):
+            if r < len(color_grid) and c < len(color_grid[r]):
                 cell_color = color_grid[r][c]
                 if cell_color == '#':
                     walls.add((c - 1, r - 1))
@@ -419,13 +419,14 @@ class GameEngine:
 
 # --- heuristics ---
 class HeuristicCalculator:
-    def __init__(self, engine: GameEngine):
+    def __init__(self, engine: GameEngine, ice_multiplier: int = 3):
         self.engine = engine
         self.w = engine.w
         self.h = engine.h
         self.num_blocks = engine.num_blocks
         self.target_indices = engine.target_indices
         self.ice_counts = engine.ice_counts
+        self.ice_multiplier = ice_multiplier
 
         self.min_moves = []
         for i in range(self.num_blocks):
@@ -473,7 +474,7 @@ class HeuristicCalculator:
                 if needed > 0:
                     ice_penalty += needed
 
-        return h_sum + (3 * ice_penalty)
+        return h_sum + (self.ice_multiplier * ice_penalty)
 
 # --- complete_solver ---
 class CompleteAStarSolver:
@@ -482,7 +483,7 @@ class CompleteAStarSolver:
         self.time_limit = time_limit
         self.verbose = verbose
         self.engine = GameEngine(level)
-        self.heuristic = HeuristicCalculator(self.engine)
+        self.heuristic = HeuristicCalculator(self.engine, ice_multiplier=0)
 
     def solve(self) -> Tuple[str, List[Tuple[str, int, int]], int, int, int, float]:
         start_time = time.time()
@@ -491,12 +492,9 @@ class CompleteAStarSolver:
         if self.engine.is_solved(s0[1]):
             return "SOLVED", [], 0, 0, 0, time.time() - start_time
 
-        for weight, budget in [(1.8, 500000)]:
-            status, path, exp, gen, uniq, t = self._run_astar(s0, weight, start_time, budget)
-            if status == "SOLVED" or status == "UNSOLVABLE":
-                return status, path, exp, gen, uniq, time.time() - start_time
-            if time.time() - start_time >= self.time_limit:
-                break
+        status, path, exp, gen, uniq, t = self._run_astar(s0, 1.0, start_time, 10_000_000)
+        if status == "SOLVED" or status == "UNSOLVABLE":
+            return status, path, exp, gen, uniq, time.time() - start_time
 
         return "TIMEOUT", [], 0, 0, 0, time.time() - start_time
 
@@ -505,7 +503,7 @@ class CompleteAStarSolver:
         pos0, mask0, cnt0 = s0
         h0 = self.heuristic.compute_h(pos0, mask0, cnt0)
         counter = 0
-        heapq.heappush(open_set, (weight * h0, -h0, counter, 0, pos0, mask0, cnt0, None))
+        heapq.heappush(open_set, (weight * h0, h0, counter, 0, pos0, mask0, cnt0, None))
 
         key0 = self.engine.get_state_key(pos0, mask0)
         best_g: Dict[Tuple, int] = {key0: 0}
@@ -517,9 +515,9 @@ class CompleteAStarSolver:
                 return "TIMEOUT", [], expanded_nodes, generated_nodes, len(best_g), time.time() - global_start_time
 
             if expanded_nodes >= node_budget:
-                return "BUDGET_EXCEEDED", [], expanded_nodes, generated_nodes, len(best_g), time.time() - global_start_time
+                return "TIMEOUT", [], expanded_nodes, generated_nodes, len(best_g), time.time() - global_start_time
 
-            f, neg_g, _, g, pos, mask, cnt, path_node = heapq.heappop(open_set)
+            f, _h_tie, _, g, pos, mask, cnt, path_node = heapq.heappop(open_set)
             current_key = self.engine.get_state_key(pos, mask)
             
             if g != best_g.get(current_key):
@@ -555,7 +553,7 @@ class CompleteAStarSolver:
                 b_id = self.engine.idx_to_block_id[b_idx]
                 move = (b_id, nidx % self.engine.w, nidx // self.engine.w)
                 
-                heapq.heappush(open_set, (f_val, -h_val, counter, next_g, npos, nmask, ncnt, (move, path_node)))
+                heapq.heappush(open_set, (f_val, h_val, counter, next_g, npos, nmask, ncnt, (move, path_node)))
 
         return "UNSOLVABLE", [], expanded_nodes, generated_nodes, len(best_g), time.time() - global_start_time
 
@@ -594,7 +592,7 @@ class FastSolver:
                 return "TIMEOUT", [], expanded_nodes, generated_nodes, len(visited), time.time() - start_time
 
             if expanded_nodes >= budget:
-                return "BUDGET_EXCEEDED", [], expanded_nodes, generated_nodes, len(visited), time.time() - start_time
+                return "TIMEOUT", [], expanded_nodes, generated_nodes, len(visited), time.time() - start_time
 
             h, _, pos, mask, cnt, path_node = heapq.heappop(open_set)
 
