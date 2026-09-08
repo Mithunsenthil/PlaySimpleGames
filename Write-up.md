@@ -105,12 +105,6 @@ The 3× multiplier is intentionally inadmissible. It overestimates the cost of s
 ## 6. Search Algorithms
 We deliver three solvers, each using a fundamentally different search paradigm:
 
-| Algorithm | Strategy | Optimality | Speed |
-| --- | --- | --- | --- |
-| Complete A* | Best-first, f = g + h | Guaranteed optimal | Moderate |
-| Fast (Greedy) | Best-first, f = h only | No guarantee | Fastest |
-| Fringe Search | Iterative deepening | Near-optimal | Moderate |
-
 **Complete A* (W = 1.0)**
 This is the natural choice for a correctness-first solver. A* is both complete and optimal when paired with an admissible heuristic. We use W = 1.0 (not weighted) to guarantee the first solution found is the shortest. The heap is ordered by f(n) = g(n) + h(n) with h(n)-ascending tie-breaking to prefer nodes closer to the goal. A `best_g` map keyed by canonical state prevents redundant expansion. Budget is 10M nodes, 60 s.
 

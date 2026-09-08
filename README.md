@@ -49,6 +49,21 @@ MOVES: 2
 - **MOVES**: Total number of moves N
 - Each following line represents a slide: `<block_id> <x> <y>` where (x, y) is the new top-left position of the block.
 
+### Verbose Output
+
+If you run the solver with the `--verbose` flag, it will print performance metrics and search statistics to `stderr` before printing the standard output:
+
+```text
+[DEBUG] Status: SOLVED
+[DEBUG] Expanded Nodes: 2
+[DEBUG] Elapsed Time: 0.0008s
+[DEBUG] Moves Count: 2
+STATUS: SOLVED
+MOVES: 2
+1 2 0
+0 0 3
+```
+
 ---
 
 ## Project Structure
